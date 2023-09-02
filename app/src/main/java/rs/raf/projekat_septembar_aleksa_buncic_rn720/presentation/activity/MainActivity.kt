@@ -1,7 +1,7 @@
 package rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.R
@@ -14,6 +14,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        window.setFlags(0x00000400, 0x00000400)
+        supportActionBar!!.hide()
 
         initView()
     }

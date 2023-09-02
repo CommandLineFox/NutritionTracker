@@ -12,22 +12,23 @@ class MealViewModel(var mealApi: MealApi) : ViewModel() {
     lateinit var fragment: MealFragment
 
     fun loadData() {
-        Repository.getInstance().shortMeals.clear()
-        fragment.lifecycleScope.launch {
-            val response = try {
-                if (Repository.getInstance().id != null) {
-                    mealApi.getFullMealById(Repository.getInstance().id!!)
-                } else {
-                    mealApi.getFullMealById(1)
+        if (Repository.getInstance().isMealFromApi) {
+            fragment.lifecycleScope.launch {
+                val response = try {
+                    if (Repository.getInstance().id != null) {
+                        mealApi.getFullMealById(Repository.getInstance().id!!)
+                    } else {
+                        mealApi.getFullMealById(1)
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(fragment.context, e.message, Toast.LENGTH_SHORT).show()
+                    return@launch
                 }
-            } catch (e: Exception) {
-                Toast.makeText(fragment.context, e.message, Toast.LENGTH_SHORT)
-                return@launch
-            }
 
-            if (response.isSuccessful && response.body() != null) {
-                if (Repository.getInstance().id != null) {
-                    Repository.getInstance().fullMeal.value = response.body()!!.meals.get(0)
+                if (response.isSuccessful && response.body() != null) {
+                    if (Repository.getInstance().id != null) {
+                        Repository.getInstance().fullMealData.value = response.body()!!.meals.get(0)
+                    }
                 }
             }
         }

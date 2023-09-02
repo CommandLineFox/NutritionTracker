@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.R
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.Repository
-import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.ShortMeal
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.IMeal
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.databinding.FragmentListBinding
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.adapter.MealListAdapter
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.viewmodel.ListViewModel
@@ -54,8 +55,8 @@ class ListFragment : Fragment() {
         binding.fragmentListRecyclerView.layoutManager = LinearLayoutManager(this.context)
         mealListAdapter = MealListAdapter()
         mealListAdapter.setOnClickListener(object : MealListAdapter.OnClickListener {
-            override fun onClick(position: Int, shortMeal: ShortMeal) {
-                Repository.getInstance().id = shortMeal.idMeal
+            override fun onClick(position: Int, iMeal: IMeal) {
+                Repository.getInstance().id = iMeal.getId()
                 val mealFragment = MealFragment()
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.fragmentMeal, mealFragment)?.commit()
@@ -63,15 +64,21 @@ class ListFragment : Fragment() {
             }
         })
 
+        binding.fragmentListRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                this.context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
         binding.fragmentListRecyclerView.adapter = mealListAdapter
     }
 
     private fun loadData() {
         mealListAdapter.meals = listOf()
         viewModel.loadData()
-        Repository.getInstance().shortMealList.observe(this.viewLifecycleOwner, Observer {
+        Repository.getInstance().shortMealData.observe(this.viewLifecycleOwner, Observer {
             mealListAdapter.meals = it.sortedBy { item ->
-                item.strMeal
+                item.getTitle()
             }
         })
     }

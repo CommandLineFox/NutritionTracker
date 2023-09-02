@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/categoryItemImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="30dp" />
+
+            <TextView
+                android:id="@+id/categoryItemTitle"
+                android:layout_width="220dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:text="Lorem ipsum"
+                android:textSize="30dp" />
+        </LinearLayout>
+
+        <ToggleButton
+            android:id="@+id/categoryItemToggleButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:textOff="▼"
+            android:textOn="▲" />
+
+        <TextView
+            android:id="@+id/categoryItemDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pharetra metus id mi accumsan dapibus. Donec tempus lectus tempor, cursus diam ac, accumsan enim. Aliquam ac dui vestibulum, elementum enim ac, rutrum lectus. Sed odio tellus, rhoncus ut pellentesque a, porta vitae metus. Suspendisse fermentum erat in velit elementum, at laoreet nisi tincidunt. Donec condimentum vulputate leo, ut maximus nibh. Nulla egestas eleifend nisl vitae scelerisque. In blandit nisl quam, ut convallis leo dignissim quis. Mauris pharetra aliquam maximus."
+            android:textSize="20dp"
+            android:visibility="gone" />
+    </LinearLayout>
+</FrameLayout>

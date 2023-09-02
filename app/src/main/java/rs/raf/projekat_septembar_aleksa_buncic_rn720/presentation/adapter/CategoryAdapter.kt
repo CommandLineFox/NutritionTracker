@@ -10,39 +10,38 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.IMeal
-import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.ShortMeal
-import rs.raf.projekat_septembar_aleksa_buncic_rn720.databinding.FragmentListitemBinding
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.Category
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.databinding.FragmentCategoryitemBinding
 
-
-class MealListAdapter : RecyclerView.Adapter<MealListAdapter.MealViewHolder>() {
+class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
     private var onClickListener: OnClickListener? = null
 
-    inner class MealViewHolder(val binding: FragmentListitemBinding) :
+
+    inner class CategoryViewHolder(val binding: FragmentCategoryitemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    private val diffCallback = object : DiffUtil.ItemCallback<IMeal>() {
-        override fun areItemsTheSame(oldItem: IMeal, newItem: IMeal): Boolean {
-            return oldItem.getId() == newItem.getId()
+    private val diffCallback = object : DiffUtil.ItemCallback<Category>() {
+        override fun areItemsTheSame(oldItem: Category, newItem: Category): Boolean {
+            return oldItem.idCategory == newItem.idCategory
         }
 
-        override fun areContentsTheSame(oldItem: IMeal, newItem: IMeal): Boolean {
-            return oldItem.getTitle() == newItem.getTitle() && oldItem.getImage() == newItem.getImage()
+        override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean {
+            return oldItem.strCategory == newItem.strCategory
         }
     }
 
     private val differ = AsyncListDiffer(this, diffCallback)
-    var meals: List<IMeal>
+    var categories: List<Category>
         get() = differ.currentList
         set(value) {
             differ.submitList(value)
         }
 
-    override fun getItemCount() = meals.size
+    override fun getItemCount() = categories.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
-        return MealViewHolder(
-            FragmentListitemBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
+        return CategoryViewHolder(
+            FragmentCategoryitemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -50,26 +49,27 @@ class MealListAdapter : RecyclerView.Adapter<MealListAdapter.MealViewHolder>() {
         )
     }
 
-    override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
-        val meal = meals[position]
+    override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
+        val category = categories[position]
         holder.binding.apply {
-            listItemText.text = meal.getTitle()
-            DownloadImageFromInternet(listItemImage).execute(meal.getImage())
+            categoryItemTitle.text = category.strCategory
+            DownloadImageFromInternet(categoryItemImage).execute(category.strCategoryThumb)
+            categoryItemDescription.text = category.strCategoryDescription
 
-            listItemType.text = meal.getType()
-            listItemDate.text = meal.getDate()
-            if (meal is ShortMeal) {
-                listItemType.visibility = View.GONE
-                listItemDate.visibility = View.GONE
-            } else {
-                listItemType.visibility = View.VISIBLE
-                listItemDate.visibility = View.VISIBLE
+            categoryItemToggleButton.setOnCheckedChangeListener { _, isChecked ->
+                run {
+                    if (isChecked) {
+                        categoryItemDescription.visibility = View.VISIBLE
+                    } else {
+                        categoryItemDescription.visibility = View.GONE
+                    }
+                }
             }
         }
 
         holder.itemView.setOnClickListener {
             if (onClickListener != null) {
-                onClickListener!!.onClick(position, meal)
+                onClickListener!!.onClick(position, category)
             }
         }
     }
@@ -95,7 +95,7 @@ class MealListAdapter : RecyclerView.Adapter<MealListAdapter.MealViewHolder>() {
     }
 
     interface OnClickListener {
-        fun onClick(position: Int, iMeal: IMeal)
+        fun onClick(position: Int, category: Category)
     }
 
     fun setOnClickListener(onClickListener: OnClickListener) {
