@@ -31,10 +31,7 @@ class CategoryFragment : Fragment() {
         viewModel.fragment = this
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentCategoryBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -57,12 +54,11 @@ class CategoryFragment : Fragment() {
             override fun onClick(position: Int, category: Category) {
                 Repository.getInstance().category = category.strCategory
                 val listFragment = ListFragment()
-                activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.fragmentCategory, listFragment)?.commitAllowingStateLoss()
+                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentCategory, listFragment)?.commitAllowingStateLoss()
             }
         })
 
-        binding.fragmentCategoryRecyclerView.addItemDecoration(DividerItemDecoration(this.context,DividerItemDecoration.VERTICAL))
+        binding.fragmentCategoryRecyclerView.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
         binding.fragmentCategoryRecyclerView.adapter = categoryAdapter
     }
 
@@ -70,9 +66,7 @@ class CategoryFragment : Fragment() {
         categoryAdapter.categories = listOf()
         viewModel.loadData()
         Repository.getInstance().categoryData.observe(this.viewLifecycleOwner, Observer {
-            categoryAdapter.categories = it.sortedBy { item ->
-                item.strCategory
-            }
+            categoryAdapter.categories = it.sortedBy { item -> item.strCategory }
         })
     }
 }

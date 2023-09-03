@@ -33,10 +33,7 @@ class MealFragment : Fragment() {
         viewModel.fragment = this
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMealBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -49,6 +46,7 @@ class MealFragment : Fragment() {
 
     private fun init() {
         loadData()
+        setupButton()
     }
 
     @SuppressLint("SetTextI18n", "SetJavaScriptEnabled")
@@ -59,8 +57,12 @@ class MealFragment : Fragment() {
             binding.fragmentMealTitle.text = it.strMeal
             binding.fragmentMealArea.text = "Area: " + it.strArea
             binding.fragmentMealCategory.text = "Category: " + it.strCategory
-            binding.fragmentMealTags.text = "Tags: " + it.strTags?.split(",")?.joinToString(", ")
-
+            if (it.strTags.isNullOrEmpty()) {
+                binding.fragmentMealTags.visibility = View.GONE
+            } else {
+                binding.fragmentMealTags.text = "Tags: " + it.strTags.split(",").joinToString(", ")
+                binding.fragmentMealTags.visibility = View.VISIBLE
+            }
             binding.fragmentMealIngredient1.text = it.strIngredient1
             binding.fragmentMealMeasurement1.text = it.strMeasure1
             if (it.strIngredient1.isNullOrEmpty()) {
@@ -133,7 +135,6 @@ class MealFragment : Fragment() {
                 binding.fragmentMealConstraint9.visibility = View.VISIBLE
             }
 
-
             binding.fragmentMealIngredient10.text = it.strIngredient10
             binding.fragmentMealMeasurement10.text = it.strMeasure10
             if (it.strIngredient10.isNullOrEmpty()) {
@@ -141,7 +142,6 @@ class MealFragment : Fragment() {
             } else {
                 binding.fragmentMealConstraint10.visibility = View.VISIBLE
             }
-
 
             binding.fragmentMealIngredient11.text = it.strIngredient11
             binding.fragmentMealMeasurement11.text = it.strMeasure11
@@ -151,7 +151,6 @@ class MealFragment : Fragment() {
                 binding.fragmentMealConstraint11.visibility = View.VISIBLE
             }
 
-
             binding.fragmentMealIngredient12.text = it.strIngredient12
             binding.fragmentMealMeasurement12.text = it.strMeasure12
             if (it.strIngredient12.isNullOrEmpty()) {
@@ -159,7 +158,6 @@ class MealFragment : Fragment() {
             } else {
                 binding.fragmentMealConstraint12.visibility = View.VISIBLE
             }
-
 
             binding.fragmentMealIngredient13.text = it.strIngredient13
             binding.fragmentMealMeasurement13.text = it.strMeasure13
@@ -169,7 +167,6 @@ class MealFragment : Fragment() {
                 binding.fragmentMealConstraint13.visibility = View.VISIBLE
             }
 
-
             binding.fragmentMealIngredient14.text = it.strIngredient14
             binding.fragmentMealMeasurement14.text = it.strMeasure14
             if (it.strIngredient14.isNullOrEmpty()) {
@@ -177,7 +174,6 @@ class MealFragment : Fragment() {
             } else {
                 binding.fragmentMealConstraint14.visibility = View.VISIBLE
             }
-
 
             binding.fragmentMealIngredient15.text = it.strIngredient15
             binding.fragmentMealMeasurement15.text = it.strMeasure15
@@ -187,7 +183,6 @@ class MealFragment : Fragment() {
                 binding.fragmentMealConstraint15.visibility = View.VISIBLE
             }
 
-
             binding.fragmentMealIngredient16.text = it.strIngredient16
             binding.fragmentMealMeasurement16.text = it.strMeasure16
             if (it.strIngredient16.isNullOrEmpty()) {
@@ -195,7 +190,6 @@ class MealFragment : Fragment() {
             } else {
                 binding.fragmentMealConstraint16.visibility = View.VISIBLE
             }
-
 
             binding.fragmentMealIngredient17.text = it.strIngredient17
             binding.fragmentMealMeasurement17.text = it.strMeasure17
@@ -205,7 +199,6 @@ class MealFragment : Fragment() {
                 binding.fragmentMealConstraint17.visibility = View.VISIBLE
             }
 
-
             binding.fragmentMealIngredient18.text = it.strIngredient18
             binding.fragmentMealMeasurement18.text = it.strMeasure18
             if (it.strIngredient18.isNullOrEmpty()) {
@@ -213,7 +206,6 @@ class MealFragment : Fragment() {
             } else {
                 binding.fragmentMealConstraint18.visibility = View.VISIBLE
             }
-
 
             binding.fragmentMealIngredient19.text = it.strIngredient19
             binding.fragmentMealMeasurement19.text = it.strMeasure19
@@ -286,6 +278,12 @@ class MealFragment : Fragment() {
 
         override fun onPostExecute(result: Bitmap?) {
             imageView.setImageBitmap(result)
+        }
+    }
+
+    private fun setupButton() {
+        binding.fragmentMealButtonMenu.setOnClickListener{
+            viewModel.menuButtonClicked()
         }
     }
 }

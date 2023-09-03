@@ -1,12 +1,11 @@
 package rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.activity
 
 import android.content.Intent
-import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.R
 
 class LoginActivity : AppCompatActivity() {
@@ -32,23 +31,15 @@ class LoginActivity : AppCompatActivity() {
         var username: String
         var password: String
 
-        activityLoginButton!!.setOnClickListener {
-            username = activityLoginUsername!!.text.toString()
-            password = activityLoginPassword!!.text.toString()
+        activityLoginButton.setOnClickListener {
+            username = activityLoginUsername.text.toString()
+            password = activityLoginPassword.text.toString()
 
             if (username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(
-                    this,
-                    "Username and password cannot be left empty",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this, "Username and password cannot be left empty", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             } else if (password.length < 5) {
-                Toast.makeText(
-                    this,
-                    "Password cannot be less than 5 characters long",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this, "Password cannot be less than 5 characters long", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             if (password != "Stinky") {

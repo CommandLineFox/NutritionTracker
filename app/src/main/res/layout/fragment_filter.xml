@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentFilter"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#BBBBBB"
+    android:padding="5dp"
+    tools:context=".presentation.fragment.FilterFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/fragmentFilterLayoutToggles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ToggleButton
+                android:id="@+id/fragmentFilterCategory"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@color/white"
+                android:textOff="Category"
+                android:textOn="Category"
+                android:textSize="13dp" />
+
+            <ToggleButton
+                android:id="@+id/fragmentFilterArea"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@color/white"
+                android:textOff="Area"
+                android:textOn="Area"
+                android:textSize="13dp" />
+
+            <ToggleButton
+                android:id="@+id/fragmentFilterIngredient"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@color/white"
+                android:textOff="Ingredient"
+                android:textOn="Ingredient"
+                android:textSize="13dp" />
+
+            <ToggleButton
+                android:id="@+id/fragmentFilterTag"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@color/white"
+                android:textOff="Tag"
+                android:textOn="Tag"
+                android:textSize="13dp" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fragmentFilterRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragmentFilterLayoutToggles" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

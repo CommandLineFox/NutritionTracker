@@ -9,16 +9,14 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.api.MealApi
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.viewmodel.CategoryViewModel
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.viewmodel.FilterViewModel
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.viewmodel.ListViewModel
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.viewmodel.MealViewModel
 import java.util.concurrent.TimeUnit
 
 val coreModule = module {
     single<SharedPreferences> {
-        androidApplication().getSharedPreferences(
-            androidApplication().packageName,
-            Context.MODE_PRIVATE
-        )
+        androidApplication().getSharedPreferences(androidApplication().packageName, Context.MODE_PRIVATE)
     }
 
     single {
@@ -47,5 +45,8 @@ val coreModule = module {
     }
     viewModel {
         CategoryViewModel(get())
+    }
+    viewModel {
+        FilterViewModel(get())
     }
 }

@@ -54,4 +54,24 @@ data class FullMeal(
     val strSource: String?,
     val strTags: String?,
     val strYoutube: String?
-)
+) : IMeal {
+    override fun getId(): Long? {
+        return idMeal
+    }
+
+    override fun getTitle(): String? {
+        return strMeal
+    }
+
+    override fun getImage(): String? {
+        return strMealThumb
+    }
+
+    override fun getDate(): String? {
+        return null
+    }
+
+    override fun getType(): String? {
+        return null
+    }
+}

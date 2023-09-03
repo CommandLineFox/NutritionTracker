@@ -16,9 +16,7 @@ import rs.raf.projekat_septembar_aleksa_buncic_rn720.databinding.FragmentCategor
 class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
     private var onClickListener: OnClickListener? = null
 
-
-    inner class CategoryViewHolder(val binding: FragmentCategoryitemBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    inner class CategoryViewHolder(val binding: FragmentCategoryitemBinding) : RecyclerView.ViewHolder(binding.root)
 
     private val diffCallback = object : DiffUtil.ItemCallback<Category>() {
         override fun areItemsTheSame(oldItem: Category, newItem: Category): Boolean {
@@ -41,11 +39,7 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         return CategoryViewHolder(
-            FragmentCategoryitemBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
+            FragmentCategoryitemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 

@@ -10,16 +10,15 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.FullMeal
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.IMeal
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.ShortMeal
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.databinding.FragmentListitemBinding
 
-
 class MealListAdapter : RecyclerView.Adapter<MealListAdapter.MealViewHolder>() {
     private var onClickListener: OnClickListener? = null
 
-    inner class MealViewHolder(val binding: FragmentListitemBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    inner class MealViewHolder(val binding: FragmentListitemBinding) : RecyclerView.ViewHolder(binding.root)
 
     private val diffCallback = object : DiffUtil.ItemCallback<IMeal>() {
         override fun areItemsTheSame(oldItem: IMeal, newItem: IMeal): Boolean {
@@ -58,7 +57,7 @@ class MealListAdapter : RecyclerView.Adapter<MealListAdapter.MealViewHolder>() {
 
             listItemType.text = meal.getType()
             listItemDate.text = meal.getDate()
-            if (meal is ShortMeal) {
+            if (meal is ShortMeal || meal is FullMeal) {
                 listItemType.visibility = View.GONE
                 listItemDate.visibility = View.GONE
             } else {

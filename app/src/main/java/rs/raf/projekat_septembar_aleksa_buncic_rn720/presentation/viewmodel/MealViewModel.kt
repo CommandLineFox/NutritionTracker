@@ -33,4 +33,8 @@ class MealViewModel(var mealApi: MealApi) : ViewModel() {
             }
         }
     }
+
+    fun menuButtonClicked() {
+        //TODO
+    }
 }

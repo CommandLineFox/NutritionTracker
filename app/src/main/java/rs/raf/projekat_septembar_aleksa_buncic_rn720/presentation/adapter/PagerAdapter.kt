@@ -21,7 +21,7 @@ class PagerAdapter(
 
     override fun getItem(position: Int): Fragment {
         when (position) {
-            0 -> return if (Repository.getInstance().category != null) ListFragment() else CategoryFragment()
+            0 -> return if (Repository.getInstance().category != null && Repository.getInstance().area != null && Repository.getInstance().ingredient != null && Repository.getInstance().tag != null && Repository.getInstance().search != null) ListFragment() else CategoryFragment()
             1 -> return MealFragment()
             else -> return ProfileFragment()
         }

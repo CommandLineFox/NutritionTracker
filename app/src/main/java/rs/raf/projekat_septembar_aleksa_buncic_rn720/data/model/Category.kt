@@ -5,4 +5,8 @@ data class Category(
     val strCategory: String,
     val strCategoryDescription: String,
     val strCategoryThumb: String
-)
+) : IFilter {
+    override fun getTitle(): String {
+        return strCategory
+    }
+}

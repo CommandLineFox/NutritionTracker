@@ -1,13 +1,14 @@
 package rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.appcompat.app.AppCompatActivity
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.R
 
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
