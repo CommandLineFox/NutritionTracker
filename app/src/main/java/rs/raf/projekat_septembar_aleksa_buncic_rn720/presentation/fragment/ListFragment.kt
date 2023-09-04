@@ -1,5 +1,6 @@
 package rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.fragment
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,6 +15,7 @@ import com.google.android.material.tabs.TabLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.R
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.Repository
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.database.MealObject
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.IMeal
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.databinding.FragmentListBinding
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.adapter.MealListAdapter
@@ -49,6 +51,7 @@ class ListFragment : Fragment() {
         setupRecycler()
         loadData()
         setupButton()
+        setupToggleButtons()
     }
 
     private fun setupRecycler() {
@@ -56,9 +59,21 @@ class ListFragment : Fragment() {
         mealListAdapter = MealListAdapter()
         mealListAdapter.setOnClickListener(object : MealListAdapter.OnClickListener {
             override fun onClick(position: Int, iMeal: IMeal) {
-                Repository.getInstance().id = iMeal.getId()
+                if (Repository.getInstance().isMealFromApi) {
+                    Repository.getInstance().id = iMeal.getId()
+                } else if (iMeal is MealObject) {
+                    Repository.getInstance().currentMeal = iMeal.meal
+                }
+
                 val mealFragment = MealFragment()
-                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentMeal, mealFragment)?.commit()
+
+                if (Repository.getInstance().addingToMenu) {
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentMeal, AddToMenuFragment())?.commit()
+                    Repository.getInstance().addingToMenu = false
+                } else {
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentMeal, mealFragment)?.commit()
+                }
+
                 activity?.findViewById<TabLayout>(R.id.activityMainTabLayout)?.getTabAt(1)?.select()
             }
         })
@@ -107,5 +122,58 @@ class ListFragment : Fragment() {
         })
 
         viewModel.planButtonClicked()
+    }
+
+    private fun setupToggleButtons() {
+        binding.fragmentListFilterApi.setOnCheckedChangeListener { _, isChecked ->
+            run {
+                if (isChecked) {
+                    binding.fragmentListFilterApi.isEnabled = false
+                    binding.fragmentListFilterLocal.isChecked = false
+
+                    binding.fragmentListFilterApi.setBackgroundColor(Color.WHITE)
+                    binding.fragmentListFilterLocal.setBackgroundColor(Color.parseColor("#BBBBBB"))
+
+                    if (Repository.getInstance().isMealFromApi) {
+                        return@run
+                    }
+
+                    Repository.getInstance().isMealFromApi = true
+
+                    mealListAdapter.meals = listOf()
+                    viewModel.loadData()
+                } else {
+                    binding.fragmentListFilterApi.isEnabled = true
+                }
+            }
+        }
+
+        binding.fragmentListFilterLocal.setOnCheckedChangeListener { _, isChecked ->
+            run {
+                if (isChecked) {
+                    binding.fragmentListFilterApi.isChecked = false
+                    binding.fragmentListFilterLocal.isEnabled = false
+
+                    binding.fragmentListFilterLocal.setBackgroundColor(Color.WHITE)
+                    binding.fragmentListFilterApi.setBackgroundColor(Color.parseColor("#BBBBBB"))
+
+                    if (!Repository.getInstance().isMealFromApi) {
+                        return@run
+                    }
+                    Repository.getInstance().isMealFromApi = false
+
+                    mealListAdapter.meals = listOf()
+                    viewModel.loadData()
+                } else {
+                    binding.fragmentListFilterLocal.isEnabled = true
+                }
+            }
+        }
+
+        if (Repository.getInstance().isMealFromApi) {
+            binding.fragmentListFilterApi.isChecked = true
+        } else {
+            binding.fragmentListFilterLocal.isChecked = true
+        }
     }
 }

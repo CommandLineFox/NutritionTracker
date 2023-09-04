@@ -31,10 +31,8 @@ class MealViewModel(var mealApi: MealApi) : ViewModel() {
                     }
                 }
             }
+        } else {
+            Repository.getInstance().fullMealData.value = Repository.getInstance().currentMeal
         }
-    }
-
-    fun menuButtonClicked() {
-        //TODO
     }
 }

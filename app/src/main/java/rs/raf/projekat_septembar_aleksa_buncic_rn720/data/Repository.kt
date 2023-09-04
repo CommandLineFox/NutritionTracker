@@ -1,6 +1,7 @@
 package rs.raf.projekat_septembar_aleksa_buncic_rn720.data
 
 import androidx.lifecycle.MutableLiveData
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.database.MealModel
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.Category
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.FullMeal
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.IFilter
@@ -33,8 +34,8 @@ class Repository private constructor() {
     var id: Long? = null
 
     val fullMeals: MutableList<FullMeal> = mutableListOf()
-    val fullMealData: MutableLiveData<FullMeal> by lazy {
-        MutableLiveData<FullMeal>()
+    val fullMealData: MutableLiveData<IMeal> by lazy {
+        MutableLiveData<IMeal>()
     }
 
     val mealList: MutableList<IMeal> = mutableListOf()
@@ -51,4 +52,10 @@ class Repository private constructor() {
     val filterData: MutableLiveData<MutableList<IFilter>> by lazy {
         MutableLiveData<MutableList<IFilter>>()
     }
+
+    var currentMeal: IMeal? = null
+    var saveableMeal: MealModel? = null
+    var addingToMenu: Boolean = false
+
+    var listingFromApi: Boolean = true
 }

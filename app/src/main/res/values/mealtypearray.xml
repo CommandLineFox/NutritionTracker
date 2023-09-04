@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="menuSpinnerMealTypes">
+        <item>Breakfast</item>
+        <item>Second Breakfast</item>
+        <item>Elevenses</item>
+        <item>Luncheon</item>
+        <item>Afternoon Tea</item>
+        <item>Dinner</item>
+        <item>Supper</item>
+    </string-array>
+</resources>
