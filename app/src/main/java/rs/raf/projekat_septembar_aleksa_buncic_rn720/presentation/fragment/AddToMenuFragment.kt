@@ -11,14 +11,17 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.R
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.Repository
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.database.MealModel
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.database.MealObject
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.FullMeal
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.databinding.FragmentAddToMenuBinding
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.viewmodel.AddToMenuViewModel
+import java.time.LocalDate
 import java.util.Calendar
 
 
@@ -44,9 +47,13 @@ class AddToMenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupView()
+        if (Repository.getInstance().fullMealData.value?.getFullMeal() == null) {
+            viewModel.loadMealData(Repository.getInstance().fullMealData.value?.getId()!!)
+        }
+
         setupSpinner()
         setupButtons()
+        setupView()
     }
 
     private fun setupView() {
@@ -66,22 +73,49 @@ class AddToMenuFragment : Fragment() {
 
         binding.fragmentAddToMenuButton.setOnClickListener {
             val calendar = Calendar.getInstance()
-            calendar.set(binding.fragmentAddToMenuDate.year, binding.fragmentAddToMenuDate.month + 1, binding.fragmentAddToMenuDate.dayOfMonth)
+            calendar.set(binding.fragmentAddToMenuDate.year, binding.fragmentAddToMenuDate.month, binding.fragmentAddToMenuDate.dayOfMonth)
             val date = calendar.timeInMillis / 1000
             val type = binding.fragmentAddToMenuType.selectedItem.toString()
 
             val currentMeal = Repository.getInstance().fullMealData.value
-            if (currentMeal is FullMeal) {
-                Repository.getInstance().saveableMeal = MealModel(0, currentMeal.idMeal, date, type, Gson().toJson(currentMeal))
+
+            if (!Repository.getInstance().addingToPlan) {
+                if (currentMeal is FullMeal) {
+                    Repository.getInstance().saveableMeal = MealModel(0, currentMeal.idMeal, date, type, Gson().toJson(currentMeal))
+                }
+            } else {
+                if (currentMeal?.getFullMeal() != null) {
+                    Repository.getInstance().planMeal = MealObject(0, LocalDate.ofEpochDay(date / 86400), type, currentMeal.getFullMeal()!!)
+                    Repository.getInstance().planList.add(Repository.getInstance().planMeal!!)
+                    Repository.getInstance().planData.value = Repository.getInstance().planList
+                    Repository.getInstance().addingToPlan = false
+                } else {
+                    Toast.makeText(this@AddToMenuFragment.context, "Server took too long to respond", Toast.LENGTH_SHORT).show()
+                }
             }
 
-            viewModel.addToMenu()
-            Repository.getInstance().addingToMenu = false
+            if (Repository.getInstance().editingInMenu) {
+                viewModel.updateMenu()
+                Repository.getInstance().editingInMenu = false
+            } else if (Repository.getInstance().addingToMenu) {
+                viewModel.addToMenu()
+                Repository.getInstance().addingToMenu = false
+            }
+
             activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentAddToMenu, MealFragment())?.commitAllowingStateLoss()
         }
 
         binding.fragmentAddToMenuTitle.setOnClickListener {
-            Repository.getInstance().addingToMenu = false
+            if (Repository.getInstance().addingToMenu) {
+                Repository.getInstance().addingToMenu = false
+            } else if (Repository.getInstance().editingInMenu) {
+                Repository.getInstance().editingInMenu = false
+                activity?.findViewById<TabLayout>(R.id.activityMainTabLayout)?.getTabAt(0)?.select()
+            } else if (Repository.getInstance().addingToPlan) {
+                Repository.getInstance().addingToPlan = false
+                activity?.findViewById<TabLayout>(R.id.activityMainTabLayout)?.getTabAt(0)?.select()
+            }
+
             activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentAddToMenu, MealFragment())?.commitAllowingStateLoss()
         }
     }

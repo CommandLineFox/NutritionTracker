@@ -28,7 +28,7 @@ import rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.viewmodel.List
  */
 class ListFragment : Fragment() {
     private lateinit var binding: FragmentListBinding
-    private val viewModel by viewModel<ListViewModel>()
+    val viewModel by viewModel<ListViewModel>()
     private lateinit var mealListAdapter: MealListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,9 +57,12 @@ class ListFragment : Fragment() {
     private fun setupRecycler() {
         binding.fragmentListRecyclerView.layoutManager = LinearLayoutManager(this.context)
         mealListAdapter = MealListAdapter()
+
+        mealListAdapter.listFragment = this@ListFragment
+
         mealListAdapter.setOnClickListener(object : MealListAdapter.OnClickListener {
             override fun onClick(position: Int, iMeal: IMeal) {
-                if (Repository.getInstance().isMealFromApi) {
+                if (Repository.getInstance().isMealFromApi == 0) {
                     Repository.getInstance().id = iMeal.getId()
                 } else if (iMeal is MealObject) {
                     Repository.getInstance().currentMeal = iMeal.meal
@@ -67,7 +70,7 @@ class ListFragment : Fragment() {
 
                 val mealFragment = MealFragment()
 
-                if (Repository.getInstance().addingToMenu) {
+                if (Repository.getInstance().addingToMenu || Repository.getInstance().editingInMenu || Repository.getInstance().addingToPlan) {
                     activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentMeal, AddToMenuFragment())?.commit()
                     Repository.getInstance().addingToMenu = false
                 } else {
@@ -86,16 +89,36 @@ class ListFragment : Fragment() {
         mealListAdapter.meals = listOf()
         viewModel.loadData()
         Repository.getInstance().mealData.observe(this.viewLifecycleOwner, Observer {
-            mealListAdapter.meals = it.sortedBy { item -> item.getTitle() }
+            if (Repository.getInstance().sortListAscending) {
+                mealListAdapter.meals = it.sortedBy { item -> item.getTitle() }
+            } else {
+                mealListAdapter.meals = it.sortedByDescending { item -> item.getTitle() }
+            }
         })
     }
 
     private fun setupButton() {
-        binding.filterListSearchButton.setOnClickListener {
-            if (!Repository.getInstance().search.isNullOrEmpty()) {
-                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentList, ListFragment())?.commit()
+        binding.filterListSort.setOnClickListener {
+            if (Repository.getInstance().sortListAscending) {
+                Repository.getInstance().sortListAscending = false
+                binding.filterListSort.text = "Z-A"
             } else {
-                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentList, FilterFragment())?.commit()
+                Repository.getInstance().sortListAscending = true
+                binding.filterListSort.text = "A-Z"
+            }
+
+            loadData()
+        }
+
+        binding.filterListSearchButton.setOnClickListener {
+            if (Repository.getInstance().isMealFromApi != 2) {
+                if (!Repository.getInstance().search.isNullOrEmpty()) {
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentList, ListFragment())?.commit()
+                } else {
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentList, FilterFragment())?.commit()
+                }
+            } else {
+                viewModel.sendEmail(binding.filterListSearchText.text)
             }
         }
 
@@ -107,38 +130,46 @@ class ListFragment : Fragment() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (binding.filterListSearchText.text.isNullOrEmpty()) {
-                    binding.filterListSearchButton.setImageResource(R.drawable.filter)
-                    Repository.getInstance().search = null
-                } else {
-                    binding.filterListSearchButton.setImageResource(R.drawable.search)
-                    Repository.getInstance().search = binding.filterListSearchText.text.toString()
-                    Repository.getInstance().category = null
-                    Repository.getInstance().area = null
-                    Repository.getInstance().ingredient = null
-                    Repository.getInstance().tag = null
+                if (Repository.getInstance().isMealFromApi != 2) {
+                    if (binding.filterListSearchText.text.isNullOrEmpty()) {
+                        binding.filterListSearchButton.setImageResource(R.drawable.filter)
+                        Repository.getInstance().search = null
+                    } else {
+                        binding.filterListSearchButton.setImageResource(R.drawable.search)
+                        Repository.getInstance().search = binding.filterListSearchText.text.toString()
+                        Repository.getInstance().category = null
+                        Repository.getInstance().area = null
+                        Repository.getInstance().ingredient = null
+                        Repository.getInstance().tag = null
+                    }
                 }
             }
         })
-
-        viewModel.planButtonClicked()
     }
 
     private fun setupToggleButtons() {
         binding.fragmentListFilterApi.setOnCheckedChangeListener { _, isChecked ->
             run {
                 if (isChecked) {
+                    if (binding.filterListSearchText.text.isNullOrEmpty()) {
+                        binding.filterListSearchButton.setImageResource(R.drawable.filter)
+                    } else {
+                        binding.filterListSearchButton.setImageResource(R.drawable.search)
+                    }
+
                     binding.fragmentListFilterApi.isEnabled = false
                     binding.fragmentListFilterLocal.isChecked = false
+                    binding.fragmentListFilterPlan.isChecked = false
 
                     binding.fragmentListFilterApi.setBackgroundColor(Color.WHITE)
                     binding.fragmentListFilterLocal.setBackgroundColor(Color.parseColor("#BBBBBB"))
+                    binding.fragmentListFilterPlan.setBackgroundColor(Color.parseColor("#BBBBBB"))
 
-                    if (Repository.getInstance().isMealFromApi) {
+                    if (Repository.getInstance().isMealFromApi == 0) {
                         return@run
                     }
 
-                    Repository.getInstance().isMealFromApi = true
+                    Repository.getInstance().isMealFromApi = 0
 
                     mealListAdapter.meals = listOf()
                     viewModel.loadData()
@@ -151,16 +182,24 @@ class ListFragment : Fragment() {
         binding.fragmentListFilterLocal.setOnCheckedChangeListener { _, isChecked ->
             run {
                 if (isChecked) {
+                    if (binding.filterListSearchText.text.isNullOrEmpty()) {
+                        binding.filterListSearchButton.setImageResource(R.drawable.filter)
+                    } else {
+                        binding.filterListSearchButton.setImageResource(R.drawable.search)
+                    }
+
                     binding.fragmentListFilterApi.isChecked = false
                     binding.fragmentListFilterLocal.isEnabled = false
+                    binding.fragmentListFilterPlan.isChecked = false
 
-                    binding.fragmentListFilterLocal.setBackgroundColor(Color.WHITE)
                     binding.fragmentListFilterApi.setBackgroundColor(Color.parseColor("#BBBBBB"))
+                    binding.fragmentListFilterLocal.setBackgroundColor(Color.WHITE)
+                    binding.fragmentListFilterPlan.setBackgroundColor(Color.parseColor("#BBBBBB"))
 
-                    if (!Repository.getInstance().isMealFromApi) {
+                    if (Repository.getInstance().isMealFromApi == 1) {
                         return@run
                     }
-                    Repository.getInstance().isMealFromApi = false
+                    Repository.getInstance().isMealFromApi = 1
 
                     mealListAdapter.meals = listOf()
                     viewModel.loadData()
@@ -170,10 +209,50 @@ class ListFragment : Fragment() {
             }
         }
 
-        if (Repository.getInstance().isMealFromApi) {
-            binding.fragmentListFilterApi.isChecked = true
-        } else {
-            binding.fragmentListFilterLocal.isChecked = true
+        binding.fragmentListFilterPlan.setOnCheckedChangeListener { _, isChecked ->
+            run {
+                if (isChecked) {
+                    binding.filterListSearchButton.setImageResource(R.drawable.send)
+
+                    binding.fragmentListFilterApi.isChecked = false
+                    binding.fragmentListFilterLocal.isChecked = false
+                    binding.fragmentListFilterPlan.isEnabled = false
+
+                    binding.fragmentListFilterApi.setBackgroundColor(Color.parseColor("#BBBBBB"))
+                    binding.fragmentListFilterLocal.setBackgroundColor(Color.parseColor("#BBBBBB"))
+                    binding.fragmentListFilterPlan.setBackgroundColor(Color.WHITE)
+
+                    if (Repository.getInstance().isMealFromApi == 2) {
+                        return@run
+                    }
+                    Repository.getInstance().isMealFromApi = 2
+
+                    mealListAdapter.meals = listOf()
+                    Repository.getInstance().mealData.value = Repository.getInstance().planList.toMutableList()
+                } else {
+                    binding.fragmentListFilterPlan.isEnabled = true
+                }
+            }
+        }
+
+        when (Repository.getInstance().isMealFromApi) {
+            0 -> {
+                binding.fragmentListFilterApi.isChecked = true
+                binding.fragmentListFilterLocal.isChecked = false
+                binding.fragmentListFilterPlan.isChecked = false
+            }
+
+            1 -> {
+                binding.fragmentListFilterApi.isChecked = false
+                binding.fragmentListFilterLocal.isChecked = true
+                binding.fragmentListFilterPlan.isChecked = false
+            }
+
+            2 -> {
+                binding.fragmentListFilterApi.isChecked = false
+                binding.fragmentListFilterLocal.isChecked = false
+                binding.fragmentListFilterPlan.isChecked = true
+            }
         }
     }
 }

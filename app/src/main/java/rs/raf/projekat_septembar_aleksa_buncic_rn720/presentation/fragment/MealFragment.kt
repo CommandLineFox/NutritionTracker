@@ -260,7 +260,6 @@ class MealFragment : Fragment() {
                 binding.fragmentMealWebView.settings.javaScriptEnabled = true
                 binding.fragmentMealWebView.webChromeClient = WebChromeClient()
                 binding.fragmentMealInstructions.text = it.strInstructions
-                println(it.toString())
             }
         })
     }

@@ -51,6 +51,6 @@ val coreModule = module {
         FilterViewModel(get())
     }
     viewModel {
-        AddToMenuViewModel()
+        AddToMenuViewModel(get())
     }
 }

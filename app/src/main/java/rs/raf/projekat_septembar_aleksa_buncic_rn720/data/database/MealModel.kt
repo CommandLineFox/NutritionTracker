@@ -17,7 +17,7 @@ class MealModel(
     @ColumnInfo(name = "meal_content") var content: String
 ) {
     @Ignore
-    fun convertToMeal() = MealObject(uid, LocalDate.ofEpochDay(mealDate), mealType, Gson().fromJson(content, FullMeal::class.java))
+    fun convertToMeal() = MealObject(uid, LocalDate.ofEpochDay(mealDate / 86400), mealType, Gson().fromJson(content, FullMeal::class.java))
 
     @Ignore
     override fun toString(): String {

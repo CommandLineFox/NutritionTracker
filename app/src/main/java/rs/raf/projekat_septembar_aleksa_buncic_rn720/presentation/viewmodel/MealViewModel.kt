@@ -12,7 +12,7 @@ class MealViewModel(var mealApi: MealApi) : ViewModel() {
     lateinit var fragment: MealFragment
 
     fun loadData() {
-        if (Repository.getInstance().isMealFromApi) {
+        if (Repository.getInstance().isMealFromApi == 0) {
             fragment.lifecycleScope.launch {
                 val response = try {
                     if (Repository.getInstance().id != null) {
@@ -27,7 +27,8 @@ class MealViewModel(var mealApi: MealApi) : ViewModel() {
 
                 if (response.isSuccessful && response.body() != null) {
                     if (Repository.getInstance().id != null) {
-                        Repository.getInstance().fullMealData.value = response.body()!!.meals.get(0)
+                        Repository.getInstance().currentMeal = response.body()!!.meals.get(0)
+                        Repository.getInstance().fullMealData.value = Repository.getInstance().currentMeal
                     }
                 }
             }

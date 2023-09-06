@@ -2,6 +2,8 @@ package rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.fragment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +51,7 @@ class FilterFragment : Fragment() {
 
     private fun init() {
         setupRecycler()
+        setupButtons()
         setupToggleButtons()
 
         binding.fragmentFilterCategory.isChecked = true
@@ -102,7 +105,11 @@ class FilterFragment : Fragment() {
         filterAdapter.ifilters = listOf()
         viewModel.loadCategories()
         Repository.getInstance().filterData.observe(this.viewLifecycleOwner, Observer {
-            filterAdapter.ifilters = it.sortedBy { item -> item.getTitle() }
+            if (Repository.getInstance().sortFilterAscending) {
+                filterAdapter.ifilters = it.distinct().sortedBy { item -> item.getTitle() }
+            } else {
+                filterAdapter.ifilters = it.distinct().sortedByDescending { item -> item.getTitle() }
+            }
         })
     }
 
@@ -110,7 +117,11 @@ class FilterFragment : Fragment() {
         filterAdapter.ifilters = listOf()
         viewModel.loadAreas()
         Repository.getInstance().filterData.observe(this.viewLifecycleOwner, Observer {
-            filterAdapter.ifilters = it.sortedBy { item -> item.getTitle() }
+            if (Repository.getInstance().sortFilterAscending) {
+                filterAdapter.ifilters = it.distinct().sortedBy { item -> item.getTitle() }
+            } else {
+                filterAdapter.ifilters = it.distinct().sortedByDescending { item -> item.getTitle() }
+            }
         })
     }
 
@@ -118,7 +129,11 @@ class FilterFragment : Fragment() {
         filterAdapter.ifilters = listOf()
         viewModel.loadIngredients()
         Repository.getInstance().filterData.observe(this.viewLifecycleOwner, Observer {
-            filterAdapter.ifilters = it.sortedBy { item -> item.getTitle() }
+            if (Repository.getInstance().sortFilterAscending) {
+                filterAdapter.ifilters = it.distinct().sortedBy { item -> item.getTitle() }
+            } else {
+                filterAdapter.ifilters = it.distinct().sortedByDescending { item -> item.getTitle() }
+            }
         })
     }
 
@@ -126,8 +141,53 @@ class FilterFragment : Fragment() {
         filterAdapter.ifilters = listOf()
         viewModel.loadTags()
         Repository.getInstance().filterData.observe(this.viewLifecycleOwner, Observer {
-            filterAdapter.ifilters = it.distinct().sortedBy { item -> item.getTitle() }
+            if (Repository.getInstance().sortFilterAscending) {
+                filterAdapter.ifilters = it.distinct().sortedBy { item -> item.getTitle() }
+            } else {
+                filterAdapter.ifilters = it.distinct().sortedByDescending { item -> item.getTitle() }
+            }
         })
+    }
+
+    private fun setupButtons() {
+        binding.fragmentFilterSort.setOnClickListener {
+            if (Repository.getInstance().sortFilterAscending) {
+                Repository.getInstance().sortFilterAscending = false
+                binding.fragmentFilterSort.text = "Z-A"
+            } else {
+                Repository.getInstance().sortFilterAscending = true
+                binding.fragmentFilterSort.text = "A-Z"
+            }
+
+            if (Repository.getInstance().category != null) {
+                loadCategories()
+            } else if (Repository.getInstance().area != null) {
+                loadAreas()
+            } else if (Repository.getInstance().ingredient != null) {
+                loadIngredients()
+            } else if (Repository.getInstance().tag != null) {
+                loadTags()
+            }
+        }
+
+        binding.fragmentFilterSearchText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                Repository.getInstance().filterData.observe(this@FilterFragment.viewLifecycleOwner, Observer {
+                    if (Repository.getInstance().sortFilterAscending) {
+                        filterAdapter.ifilters = it.sortedBy { item -> item.getTitle() }.filter { item -> item.getTitle().contains(binding.fragmentFilterSearchText.text, true) }
+                    } else {
+                        filterAdapter.ifilters = it.distinct().sortedByDescending { item -> item.getTitle() }.filter { item -> item.getTitle().contains(binding.fragmentFilterSearchText.text, true) }
+                    }
+                })
+            }
+        })
+
     }
 
     private fun setupToggleButtons() {

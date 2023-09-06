@@ -10,13 +10,19 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayout
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.R
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.Repository
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.FullMeal
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.IMeal
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.ShortMeal
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.databinding.FragmentListitemBinding
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.fragment.AddToMenuFragment
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.presentation.fragment.ListFragment
 
 class MealListAdapter : RecyclerView.Adapter<MealListAdapter.MealViewHolder>() {
     private var onClickListener: OnClickListener? = null
+    lateinit var listFragment: ListFragment
 
     inner class MealViewHolder(val binding: FragmentListitemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -63,6 +69,38 @@ class MealListAdapter : RecyclerView.Adapter<MealListAdapter.MealViewHolder>() {
             } else {
                 listItemType.visibility = View.VISIBLE
                 listItemDate.visibility = View.VISIBLE
+            }
+
+            if (Repository.getInstance().isMealFromApi != 1) {
+                listItemButtonEdit.visibility = View.GONE
+                listItemButtonDelete.visibility = View.GONE
+            } else {
+                listItemButtonEdit.visibility = View.VISIBLE
+                listItemButtonDelete.visibility = View.VISIBLE
+
+                listItemButtonEdit.setOnClickListener {
+                    Repository.getInstance().currentMeal = meal
+                    Repository.getInstance().editingInMenu = true
+                    listFragment.activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentMeal, AddToMenuFragment())?.commitAllowingStateLoss()
+                    listFragment.activity?.findViewById<TabLayout>(R.id.activityMainTabLayout)?.getTabAt(1)?.select()
+                }
+
+                listItemButtonDelete.setOnClickListener {
+                    Repository.getInstance().currentMeal = meal
+                    listFragment.viewModel.deleteFromDatabase()
+
+                    Repository.getInstance().mealList.remove(Repository.getInstance().currentMeal)
+                    Repository.getInstance().mealData.value = Repository.getInstance().mealList
+                    Repository.getInstance().currentMeal = null
+                }
+            }
+
+            listItemButtonPlan.setOnClickListener {
+                Repository.getInstance().currentMeal = meal
+                Repository.getInstance().addingToPlan = true
+                listFragment.activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentMeal, AddToMenuFragment())?.commitAllowingStateLoss()
+                listFragment.activity?.findViewById<TabLayout>(R.id.activityMainTabLayout)?.getTabAt(1)?.select()
+                Repository.getInstance().fullMealData.value = Repository.getInstance().currentMeal
             }
         }
 

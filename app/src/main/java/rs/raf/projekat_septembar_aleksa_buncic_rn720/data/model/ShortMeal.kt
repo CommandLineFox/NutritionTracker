@@ -24,4 +24,8 @@ data class ShortMeal(
     override fun getType(): String? {
         return null
     }
+
+    override fun getFullMeal(): FullMeal? {
+        return null
+    }
 }

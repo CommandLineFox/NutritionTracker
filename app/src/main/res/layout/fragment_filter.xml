@@ -14,6 +14,33 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
+        <LinearLayout
+            android:id="@+id/fragmentFilterLayoutSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#BBBBBB"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/fragmentFilterSort"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="A-Z"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/fragmentFilterSearchText"
+                android:layout_width="310dp"
+                android:layout_height="50dp" />
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/fragmentFilterLayoutToggles"
             android:layout_width="match_parent"
@@ -22,7 +49,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/fragmentFilterLayoutSearch">
 
             <ToggleButton
                 android:id="@+id/fragmentFilterCategory"

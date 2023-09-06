@@ -18,9 +18,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/filterListSort"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="A-Z"
+            android:textSize="20sp" />
+
         <EditText
             android:id="@+id/filterListSearchText"
-            android:layout_width="360dp"
+            android:layout_width="310dp"
             android:layout_height="50dp" />
 
         <ImageView
@@ -44,7 +54,7 @@
 
         <ToggleButton
             android:id="@+id/fragmentListFilterApi"
-            android:layout_width="200dp"
+            android:layout_width="135dp"
             android:layout_height="40dp"
             android:background="@color/white"
             android:textOff="Api"
@@ -53,11 +63,20 @@
 
         <ToggleButton
             android:id="@+id/fragmentListFilterLocal"
-            android:layout_width="200dp"
+            android:layout_width="135dp"
             android:layout_height="40dp"
             android:background="@color/white"
             android:textOff="Local"
             android:textOn="Local"
+            android:textSize="13sp" />
+
+        <ToggleButton
+            android:id="@+id/fragmentListFilterPlan"
+            android:layout_width="135dp"
+            android:layout_height="40dp"
+            android:background="@color/white"
+            android:textOff="Plan"
+            android:textOn="Plan"
             android:textSize="13sp" />
     </LinearLayout>
 

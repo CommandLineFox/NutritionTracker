@@ -74,4 +74,8 @@ data class FullMeal(
     override fun getType(): String? {
         return null
     }
+
+    override fun getFullMeal(): FullMeal? {
+        return this@FullMeal
+    }
 }

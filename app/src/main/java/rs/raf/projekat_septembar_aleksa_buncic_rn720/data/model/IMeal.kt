@@ -6,4 +6,5 @@ interface IMeal {
     fun getImage(): String?
     fun getDate(): String?
     fun getType(): String?
+    fun getFullMeal(): FullMeal?
 }
