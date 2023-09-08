@@ -9,4 +9,10 @@
         <item>Dinner</item>
         <item>Supper</item>
     </string-array>
+
+    <string-array name="menuFavoriteTypes">
+        <item>Area</item>
+        <item>Category</item>
+        <item>Meal</item>
+    </string-array>
 </resources>

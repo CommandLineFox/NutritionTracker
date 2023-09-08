@@ -78,4 +78,84 @@ data class FullMeal(
     override fun getFullMeal(): FullMeal? {
         return this@FullMeal
     }
+
+    override fun toString(): String {
+        var meal = ""
+        meal += "Title: $strMeal\n"
+        meal += "Category: $strCategory\n"
+        meal += "Area: $strArea\n"
+        if (!strTags.isNullOrEmpty()) {
+            meal += "Tags: $strTags\n"
+        }
+
+        meal += "Ingredients:\n"
+        if (!strIngredient1.isNullOrEmpty()) {
+            meal += "$strIngredient1 $strMeasure1\n"
+        }
+        if (!strIngredient2.isNullOrEmpty()) {
+            meal += "$strIngredient2 $strMeasure2\n"
+        }
+        if (!strIngredient3.isNullOrEmpty()) {
+            meal += "$strIngredient3 $strMeasure3\n"
+        }
+        if (!strIngredient4.isNullOrEmpty()) {
+            meal += "$strIngredient4 $strMeasure4\n"
+        }
+        if (!strIngredient5.isNullOrEmpty()) {
+            meal += "$strIngredient5 $strMeasure5\n"
+        }
+        if (!strIngredient6.isNullOrEmpty()) {
+            meal += "$strIngredient6 $strMeasure6\n"
+        }
+        if (!strIngredient7.isNullOrEmpty()) {
+            meal += "$strIngredient7 $strMeasure7\n"
+        }
+        if (!strIngredient8.isNullOrEmpty()) {
+            meal += "$strIngredient8 $strMeasure8\n"
+        }
+        if (!strIngredient9.isNullOrEmpty()) {
+            meal += "$strIngredient9 $strMeasure9\n"
+        }
+        if (!strIngredient10.isNullOrEmpty()) {
+            meal += "$strIngredient10 $strMeasure10\n"
+        }
+        if (!strIngredient11.isNullOrEmpty()) {
+            meal += "$strIngredient11 $strMeasure11\n"
+        }
+        if (!strIngredient12.isNullOrEmpty()) {
+            meal += "$strIngredient12 $strMeasure12\n"
+        }
+        if (!strIngredient13.isNullOrEmpty()) {
+            meal += "$strIngredient13 $strMeasure13\n"
+        }
+        if (!strIngredient14.isNullOrEmpty()) {
+            meal += "$strIngredient14 $strMeasure14\n"
+        }
+        if (!strIngredient15.isNullOrEmpty()) {
+            meal += "$strIngredient15 $strMeasure15\n"
+        }
+        if (!strIngredient16.isNullOrEmpty()) {
+            meal += "$strIngredient16 $strMeasure16\n"
+        }
+        if (!strIngredient17.isNullOrEmpty()) {
+            meal += "$strIngredient17 $strMeasure17\n"
+        }
+        if (!strIngredient18.isNullOrEmpty()) {
+            meal += "$strIngredient18 $strMeasure18\n"
+        }
+        if (!strIngredient19.isNullOrEmpty()) {
+            meal += "$strIngredient19 $strMeasure19\n"
+        }
+        if (!strIngredient20.isNullOrEmpty()) {
+            meal += "$strIngredient20 $strMeasure20\n"
+        }
+        if (!strSource.isNullOrEmpty()) {
+            meal += "Source: $strSource\n"
+        }
+        if (!strYoutube.isNullOrEmpty()) {
+            meal += "Youtube: $strYoutube\n"
+        }
+
+        return meal
+    }
 }

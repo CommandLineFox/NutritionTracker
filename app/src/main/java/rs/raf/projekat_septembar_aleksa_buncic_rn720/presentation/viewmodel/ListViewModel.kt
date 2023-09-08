@@ -106,7 +106,12 @@ class ListViewModel(var mealApi: MealApi) : ViewModel() {
     }
 
     private fun formatMessage(): String {
-        return ""
+        var message = ""
+        Repository.getInstance().planList.forEach {
+            message += it.toString() + "\n"
+        }
+
+        return message
     }
 
     private inner class ReadFromDatabase() : AsyncTask<Void, Void, Void?>() {

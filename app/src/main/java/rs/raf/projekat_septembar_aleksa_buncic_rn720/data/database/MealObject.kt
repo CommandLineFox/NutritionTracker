@@ -29,4 +29,13 @@ data class MealObject(var uid: Long, var mealDate: LocalDate, var mealType: Stri
     override fun getFullMeal(): FullMeal? {
         return meal
     }
+
+    override fun toString(): String {
+        var mealText = ""
+        mealText += "Date: " + getDate() + "\n"
+        mealText += "Type: $mealType\n"
+        mealText += meal.toString()
+
+        return mealText
+    }
 }

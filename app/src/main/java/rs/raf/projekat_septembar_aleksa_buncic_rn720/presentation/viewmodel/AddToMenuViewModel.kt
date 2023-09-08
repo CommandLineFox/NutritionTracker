@@ -50,6 +50,12 @@ class AddToMenuViewModel(var mealApi: MealApi) : ViewModel() {
 
             return null
         }
+
+        override fun onPostExecute(result: Void?) {
+            super.onPostExecute(result)
+
+            Repository.getInstance().observerData.value = 0
+        }
     }
 
     private inner class UpdateInDatabase(var mealModel: MealModel) : AsyncTask<Void, Void, Void?>() {
@@ -58,6 +64,12 @@ class AddToMenuViewModel(var mealApi: MealApi) : ViewModel() {
             mealDao.updateMeal(mealModel)
 
             return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+            super.onPostExecute(result)
+
+            Repository.getInstance().observerData.value = 0
         }
     }
 }

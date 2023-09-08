@@ -1,10 +1,15 @@
 package rs.raf.projekat_septembar_aleksa_buncic_rn720.data
 
 import androidx.lifecycle.MutableLiveData
+import com.github.mikephil.charting.data.Entry
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.database.MealModel
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.database.MealObject
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.Category
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.FavoriteArea
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.FavoriteCategory
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.FavoriteMeal
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.FullMeal
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.IFavorite
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.IFilter
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.model.IMeal
 
@@ -69,4 +74,24 @@ class Repository private constructor() {
 
     var sortListAscending: Boolean = true
     var sortFilterAscending: Boolean = true
+
+    val historyList: MutableList<Entry> = mutableListOf()
+    val historyData: MutableLiveData<MutableList<Entry>> by lazy {
+        MutableLiveData<MutableList<Entry>>()
+    }
+
+    val databaseMeals: MutableList<MealObject> = mutableListOf()
+    val favoriteAreas: MutableList<FavoriteArea> = mutableListOf()
+    val favoriteCategories: MutableList<FavoriteCategory> = mutableListOf()
+    val favoriteMeals: MutableList<FavoriteMeal> = mutableListOf()
+    val favoriteData: MutableLiveData<MutableList<IFavorite>> by lazy {
+        MutableLiveData<MutableList<IFavorite>>()
+    }
+    val observerData: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
+
+    var favoriteSelected = 0
+
+    var username = ""
 }

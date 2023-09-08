@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -118,7 +119,13 @@ class ListFragment : Fragment() {
                     activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentList, FilterFragment())?.commit()
                 }
             } else {
-                viewModel.sendEmail(binding.filterListSearchText.text)
+                if (binding.filterListSearchText.text.isNullOrEmpty()) {
+                    Toast.makeText(this@ListFragment.requireContext(), "Please enter a recipient", Toast.LENGTH_SHORT).show()
+                } else if (Repository.getInstance().planList.size == 0) {
+                    Toast.makeText(this@ListFragment.requireContext(), "You cannot send an empty plan", Toast.LENGTH_SHORT).show()
+                } else {
+                    viewModel.sendEmail(binding.filterListSearchText.text.toString())
+                }
             }
         }
 

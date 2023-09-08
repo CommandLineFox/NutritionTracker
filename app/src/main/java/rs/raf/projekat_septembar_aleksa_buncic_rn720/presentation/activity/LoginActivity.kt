@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import rs.raf.projekat_septembar_aleksa_buncic_rn720.R
+import rs.raf.projekat_septembar_aleksa_buncic_rn720.data.Repository
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var activityLoginUsername: EditText
@@ -33,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
 
         activityLoginButton.setOnClickListener {
             username = activityLoginUsername.text.toString()
+            Repository.getInstance().username = username
             password = activityLoginPassword.text.toString()
 
             if (username.isEmpty() || password.isEmpty()) {

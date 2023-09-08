@@ -27,9 +27,10 @@ class MainActivity : AppCompatActivity() {
 
         tabLayout.addTab(tabLayout.newTab().setText("List"))
         tabLayout.addTab(tabLayout.newTab().setText("Meal"))
-        tabLayout.addTab(tabLayout.newTab().setText("Profile"))
+        tabLayout.addTab(tabLayout.newTab().setText("History"))
+        tabLayout.addTab(tabLayout.newTab().setText("Favorites"))
 
-        val adapter = PagerAdapter(this, supportFragmentManager, 3)
+        val adapter = PagerAdapter(this, supportFragmentManager, 4)
         viewPager.adapter = adapter
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
